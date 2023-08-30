@@ -5,27 +5,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://kit.fontawesome.com/f853d09d28.js" crossorigin="anonymous"></script>
 <script defer src="bundle.js"></script></head>
 
 <body>
     <div class="page-container">
         <header>
-            <h1></h1>
-            <button></button>
+            <h1>To-Do App</h1>
+            <button>Toggle theme</button>
         </header>
         <div class="sidebar">
             <div class="first-section">
-                <div class="all"></div>
-                <div class="today"></div>
-                <div class="tomorrow"></div>
+                <button class="all">
+                    <i class="fa-solid fa-list-ul"></i>
+                    <span>All tasks</span>
+                </button>
+                <button class="today">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <span>Today</span>
+                </button>
+                <button class="tomorrow">
+                    <i class="fa-solid fa-calendar-week"></i>
+                    <span>Tomorrow</span>
+                </button>
             </div>
-            <div class="second-section"></div>
+            <div class="second-section">
+                <button class="new-project">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Project</span>
+                </button>
+            </div>
         </div>
-        <div class="main-content"></div>
+        <div class="main-content">
+            <button class="add-task">
+                <i class="fa-solid fa-file-circle-plus"></i>
+                <span class="new-task-button">New Task</span>
+            </button>
+        </div>
         <footer>
-            <div class="tm"> </div>
+            <div class="tm"></div>
         </footer>
     </div>
+
+    <dialog id="task-dialog">
+        <form action="">
+            <p>New Task</p>
+            <label for="task-title">Title
+                <input type="text" id="task-title" name="title">
+            </label>
+
+            <label for="dueDate"> Date
+                <input type="date" id="dueDate" name="dueDate">
+            </label>
+
+            <label for="description">Description
+                <input type="textarea" id="description" name="description">
+            </label>
+
+            <label for="priority">Priority
+            <select name="priority" id="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </label>
+        <button id="add-task-btn">Add</button>
+        <button id="cancel-task-btn">Cancel</button>
+        </form>
+    </dialog>
 </body>
 
 </html>
