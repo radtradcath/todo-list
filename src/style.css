@@ -112,3 +112,14 @@ footer {
     grid-row: 3 / 4;
     grid-column: 1 / -1;
 }
+
+/* dialog styling */
+
+dialog form {
+    display: flex;
+    flex-direction: column;
+}
+
+form p {
+    text-align: center;
+}

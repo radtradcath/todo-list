@@ -39,13 +39,40 @@
         <div class="main-content">
             <button class="add-task">
                 <i class="fa-solid fa-file-circle-plus"></i>
-                <span>New Task</span>
+                <span class="new-task-button">New Task</span>
             </button>
         </div>
         <footer>
             <div class="tm"></div>
         </footer>
     </div>
+
+    <dialog id="task-dialog">
+        <form action="">
+            <p>New Task</p>
+            <label for="task-title">Title
+                <input type="text" id="task-title" name="title">
+            </label>
+
+            <label for="dueDate"> Date
+                <input type="date" id="dueDate" name="dueDate">
+            </label>
+
+            <label for="description">Description
+                <input type="textarea" id="description" name="description">
+            </label>
+
+            <label for="priority">Priority
+            <select name="priority" id="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </label>
+        <button id="add-task-btn">Add</button>
+        <button id="cancel-task-btn">Cancel</button>
+        </form>
+    </dialog>
 </body>
 
 </html>
