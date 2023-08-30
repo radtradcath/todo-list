@@ -29,12 +29,78 @@ const handleForm = (function handleForm() {
     })
 })();
 
+function createDOMTask(objectTitle, objectDate, objectPriority) {
+    const domTask = document.createElement('button');
+    const domTitle = document.createElement('div');
+    const domDate = document.createElement('div');
+    const domDone = document.createElement('div');
+    const domEdit = document.createElement('div');
+    const domTitleValue = document.createElement('div');
+    const domDateValue = document.createElement('div');
+    const domNoteBtn = document.createElement('button');
+    const domDoneBtn = document.createElement('button');
+    const doneIco = document.createElement('i');
+    const domEditBtn = document.createElement('button');
+    const editIco = document.createElement('i');
 
-function appendTask(task) {
-    const myTask = document.createElement('div');
-    myTask.classList.add('myTask');
-    
+    domTask.classList.add('listed-task');      
+    domTitle.classList.add('task-header', 'domTitle');
+    domDate.classList.add('task-header', 'domDate');
+    domDone.classList.add('task-header', 'domDone');
+    domEdit.classList.add('task-header', 'domEdit');
+    domTitleValue.classList.add('title-value');
+    domDateValue.classList.add('date-value');
+    domNoteBtn.classList.add('note-btn');
+    domDoneBtn.classList.add('done-btn');
+    doneIco.setAttribute('class', 'fa-solid fa-circle-check');
+    domEditBtn.classList.add('edit-btn');
+    editIco.setAttribute('class', 'fa-solid fa-pen-to-square');
+
+    taskContainer.appendChild(domTask);
+    domTask.appendChild(domTitle);
+    domTask.appendChild(domDate);
+    domTask.appendChild(domDone);
+    domTask.appendChild(domEdit);
+    domTask.appendChild(domTitleValue);
+    domTask.appendChild(domDateValue);
+    domTask.appendChild(domNoteBtn);
+    domDoneBtn.appendChild(doneIco);
+    domTask.appendChild(domDoneBtn);
+    domEditBtn.appendChild(editIco);
+    domTask.appendChild(domEditBtn);
+
+    domTitle.textContent = "Title";
+    domDate.textContent = "Due Date";
+    domDone.textContent = "Done";
+    domEdit.textContent = "Edit";
+    domTitleValue.textContent = objectTitle;
+    domDateValue.textContent = objectDate;
+    domNoteBtn.textContent = "New Note";
+
+    if (objectPriority === 'low' ) {
+        domTask.setAttribute("style", "border-color: green");
+    } else if (objectPriority === 'medium') {
+        domTask.setAttribute("style", "border-color: yellow");
+    } else if (objectPriority === 'high') {
+        domTask.setAttribute("style", "border-color: red");
+    }
+};
+
+function renderTasks() {
+    Task.myTasks.forEach(obj => {
+        createDOMTask(obj.title, obj.dueDate, obj.priority);
+    });
 }
+
+function killDomTaskList() {
+    const allDomTasks = document.querySelectorAll('.listed-task'); 
+    
+        allDomTasks.forEach(element => {
+            element.remove();
+        })
+    };
+
+
 
 function createTask(e) {
     e.preventDefault();
@@ -47,6 +113,9 @@ function createTask(e) {
     let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
     Task.addTask(newTask);
     console.log(Task.myTasks);
+    
+    killDomTaskList();
+    renderTasks();
     dialog.close();
 };
 

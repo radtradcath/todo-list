@@ -14,7 +14,7 @@ button {
 }
 
 button:hover {
-    background: #0053ba;
+    background: #e6e9ec;
 }
 
 /* page container styling */
@@ -45,13 +45,67 @@ header button {
 .main-content {
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    gap: 10px;
+    padding: 20px;
 }
 
 .add-task {
     padding: 1em 0;
     display: block;
 }
+
+.listed-task {    
+    border-left: 12px solid;
+    height: 10%;
+    background-color: antiquewhite;
+    display: grid;
+    grid-template: 30% 1fr / 30% 30% 20% 10% 10%;
+    grid-template-areas: 
+    "domTitle domDate domNoteBtn domDone domEdit"
+    "domTitleValue domDateValue domNoteBtn domDoneBtn domEditBtn";
+    align-items: center;
+}
+
+
+.domTitle {
+    grid-area: domTitle;
+}
+
+.domDate {
+    grid-area: domDate;
+}
+
+.domDone {
+    grid-area: domDone;
+}
+
+.domEdit {
+    grid-area: domEdit;
+}
+
+.title-value {
+    grid-area: domTitleValue;
+}
+
+.date-value {
+    grid-area: domDateValue;
+}
+
+.note-btn {
+    grid-area: domNoteBtn;
+    width: 100px;
+    height: 40px;
+    border: 1px solid black;
+}
+
+.done-btn {
+    grid-area: domDoneBtn;
+}
+
+.edit-btn {
+    grid-area: domEditBtn;
+}
+
 
 /* sidebar styling */
 
