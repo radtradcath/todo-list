@@ -2,7 +2,7 @@ import Task from "./tasks.js";
 export { createNewTaskBtn };
 export { handleForm };
 
-const newTaskBtn = document.querySelector('.new-task-button');
+const newTaskBtn = document.querySelector('.add-task');
 const dialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
 const taskDate = document.querySelector('#dueDate');
