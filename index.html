@@ -36,9 +36,7 @@
                 </button>
             </div>
         </div>
-        <div class="main-content">
-            
-        </div>
+        <div class="main-content"></div>
         <footer>
             <div class="tm"></div>
         </footer>
@@ -60,14 +58,25 @@
             </label>
 
             <label for="priority">Priority
-            <select name="priority" id="priority">
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-            </select>
-        </label>
-        <button id="add-task-btn">Add</button>
-        <button id="cancel-task-btn">Cancel</button>
+                <select name="priority" id="priority">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </label>
+            <button id="add-task-btn">Add</button>
+            <button id="cancel-task-btn">Cancel</button>
+        </form>
+    </dialog>
+
+    <dialog id="project-dialog">
+        <p>New Project</p>
+        <form action="">
+            <label for="project-title">Title
+                <input type="text" id="project-title" name="project-title">
+            </label>
+            <button id="create-project-btn">Create</button>
+            <button id="cancel-project-btn">Cancel</button>
         </form>
     </dialog>
 </body>
