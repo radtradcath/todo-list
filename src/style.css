@@ -150,13 +150,29 @@ button span {
     grid-row: 2 / 3;
 }
 
-.second-section  button {
+.second-section  .new-project {
     padding: 1em;
     font-size: 1.5em;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1em;
+}
+
+.project-list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4em;
+    height: 3em;
+}
+
+.project-list i {
+    padding: 4px;
+}
+
+.project-list i:hover {    
+    cursor: pointer;
 }
 
 /* footer styling */

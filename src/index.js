@@ -1,8 +1,14 @@
 import './style.css';
-import Task from "./tasks.js"
-import { createNewTaskBtn } from './main-dom';
-import { handleForm } from './main-dom';
+import {handleCreateNewTaskBtn, handleTaskForm} from './task-dom.js';
+import { createNewProjectBtn, handleProjectForm } from './project-dom.js';
 
-console.log(Task.myTasks);
+
+
+
+
+
+
+
+
 
 

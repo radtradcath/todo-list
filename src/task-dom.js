@@ -1,35 +1,48 @@
 import Task from "./tasks.js";
-export { createNewTaskBtn };
-export { handleForm };
+export { appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
 
 const newTaskBtn = document.querySelector('.add-task');
-const dialog = document.querySelector('#task-dialog');
+const addTaskBtn = document.querySelector('#add-task-btn');
+const cancelTaskBtn = document.querySelector('#cancel-task-btn');
+const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
 const taskDate = document.querySelector('#dueDate');
 const taskDescription = document.querySelector('#description');
 const taskPriority = document.querySelector('#priority');
 const taskContainer = document.querySelector('.main-content');
+let savedTaskInputTitle;
+let savedTaskInputDate;
+let savedTaskInputDescription;
+let savedTaskInputPriority;
 
-const createNewTaskBtn = (function createNewTask() {
-    newTaskBtn.addEventListener('click', showDialog);
+const handleCreateNewTaskBtn = () => {
+    newTaskBtn.addEventListener('click', showTaskDialog);
 
-    function showDialog() {
-        dialog.showModal();
+    function showTaskDialog() {
+        taskDialog.showModal();
     }
-})();
+};
 
-const handleForm = (function handleForm() {
-    const addTaskBtn = document.querySelector('#add-task-btn');
-    const cancelTaskBtn = document.querySelector('#cancel-task-btn');
-
-    addTaskBtn.addEventListener('click', createTask);
+const handleTaskForm = (() => {
+    addTaskBtn.addEventListener('click', saveTaskValues);
     cancelTaskBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        dialog.close();
+        taskDialog.close();
     })
 })();
 
-function createDOMTask(objectTitle, objectDate, objectPriority) {
+function saveTaskValues(e) {
+    e.preventDefault();
+
+    savedTaskInputTitle = taskTitle.value;
+    savedTaskInputDate = taskDate.value;
+    savedTaskInputDescription = taskDescription.value;
+    savedTaskInputPriority = taskPriority.value;
+
+};
+
+
+function appendTaskToDom(objectTitle, objectDate, objectPriority) {
     const domTask = document.createElement('button');
     const domTitle = document.createElement('div');
     const domDate = document.createElement('div');
@@ -43,7 +56,7 @@ function createDOMTask(objectTitle, objectDate, objectPriority) {
     const domEditBtn = document.createElement('button');
     const editIco = document.createElement('i');
 
-    domTask.classList.add('listed-task');      
+    domTask.classList.add('listed-task');
     domTitle.classList.add('task-header', 'domTitle');
     domDate.classList.add('task-header', 'domDate');
     domDone.classList.add('task-header', 'domDone');
@@ -77,7 +90,7 @@ function createDOMTask(objectTitle, objectDate, objectPriority) {
     domDateValue.textContent = objectDate;
     domNoteBtn.textContent = "New Note";
 
-    if (objectPriority === 'low' ) {
+    if (objectPriority === 'low') {
         domTask.setAttribute("style", "border-color: green");
     } else if (objectPriority === 'medium') {
         domTask.setAttribute("style", "border-color: yellow");
@@ -85,39 +98,3 @@ function createDOMTask(objectTitle, objectDate, objectPriority) {
         domTask.setAttribute("style", "border-color: red");
     }
 };
-
-function renderTasks() {
-    Task.myTasks.forEach(obj => {
-        createDOMTask(obj.title, obj.dueDate, obj.priority);
-    });
-}
-
-function killDomTaskList() {
-    const allDomTasks = document.querySelectorAll('.listed-task'); 
-    
-        allDomTasks.forEach(element => {
-            element.remove();
-        })
-    };
-
-
-
-function createTask(e) {
-    e.preventDefault();
-
-    let inputTitle = taskTitle.value;
-    let inputDate = taskDate.value;
-    let inputDescription = taskDescription.value;
-    let inputPriority = taskPriority.value;
-
-    let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
-    Task.addTask(newTask);
-    console.log(Task.myTasks);
-    
-    killDomTaskList();
-    renderTasks();
-    dialog.close();
-};
-
-
-
