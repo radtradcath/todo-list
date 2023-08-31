@@ -100,7 +100,6 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
     domTitleValue.textContent = objectTitle;
     domDateValue.textContent = objectDate;
     domNoteBtn.textContent = "New Note";
-    console.log(objectTitle, objectDate, objectPriority);
 
     if (objectPriority === 'low') {
         domTask.setAttribute("style", "border-color: green");

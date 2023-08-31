@@ -1,5 +1,5 @@
 import Task from "./tasks.js";
-import { renderAddTaskBtn, killDomTasks, appendTaskToDom, createTask } from './task-dom.js';
+import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Project from "./project.js";
 export {createNewProjectBtn, handleProjectForm, thisProjectId, renderProject};
 
