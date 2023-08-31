@@ -9,10 +9,6 @@ const taskDate = document.querySelector('#dueDate');
 const taskDescription = document.querySelector('#description');
 const taskPriority = document.querySelector('#priority');
 const taskContainer = document.querySelector('.main-content');
-// let savedTaskInputTitle;
-// let savedTaskInputDate;
-// let savedTaskInputDescription;
-// let savedTaskInputPriority;
 
 const handleCreateNewTaskBtn = () => {
     const newTaskBtn = document.querySelector('.add-task');
@@ -41,11 +37,12 @@ function saveTaskValues(e) {
     let savedTaskInputDescription = taskDescription.value;
     let savedTaskInputPriority = taskPriority.value;
 
-    createTask(savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority);
+    createTask(savedTaskInputTitle, savedTaskInputDescription, savedTaskInputPriority, savedTaskInputDate);
+    taskDialog.close();
 };
 
-function createTask(inputTitle, inputDate, inputDescription, inputPriority) {
-    let newTask = new Task(inputTitle, inputDate, inputDescription, inputPriority);
+function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
+    let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
 
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
     thisProject.addTask(newTask);
@@ -103,12 +100,13 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
     domTitleValue.textContent = objectTitle;
     domDateValue.textContent = objectDate;
     domNoteBtn.textContent = "New Note";
+    console.log(objectTitle, objectDate, objectPriority);
 
     if (objectPriority === 'low') {
         domTask.setAttribute("style", "border-color: green");
     } else if (objectPriority === 'medium') {
         domTask.setAttribute("style", "border-color: yellow");
-    } else if (objectPriority === 'high') {
+    } else if (objectPriority === 'high') {        
         domTask.setAttribute("style", "border-color: red");
     }
 };

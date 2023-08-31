@@ -11,6 +11,7 @@ const projectTitleInput = document.querySelector('#project-title');
 const projectsContainer = document.querySelector('.second-section');
 let savedProjectInputTitle;
 let thisProjectId = 0;
+let id = 0;
 
 const createNewProjectBtn = (() => {
     newProjectBtn.addEventListener('click', showProjectDialog);
@@ -37,11 +38,8 @@ function saveProjectFormInput(e) {
 };
 
 function createProject(title){
-    let new1Project = new Project(title);
-    let myTask = new Task('hi', 'vamo la', 'high', 'dia 12');
-
-    new1Project.addTask(myTask);
-    console.log(new1Project.projectTasks);
+    let new1Project = new Project(title);    
+    
     Project.addProjectToArray(new1Project);
     appendProjectToList(new1Project);
 
@@ -54,10 +52,9 @@ function appendProjectToList(newProject) {
     const deleteProjectBtn = document.createElement('button');
     const deleteProjectIco = document.createElement('i');
     project.classList.add('project-list');
-    // project.setAttribute('id', id);
+    project.setAttribute('id', id);
     deleteProjectBtn.classList.add('delete-project-button');
     deleteProjectIco.setAttribute('class', "fa-solid fa-trash-can");
-    console.log(newProject.title);
     projectTitle.textContent = newProject.title;
 
     projectsContainer.appendChild(project);
@@ -69,13 +66,14 @@ function appendProjectToList(newProject) {
     let renderThisProject = renderProject.bind(newProject);
 
     project.addEventListener('click', renderThisProject);
+    id++
 };
 
 function renderProject() {
     thisProjectId = this.id;
     killDomTasks();
     renderAddTaskBtn();
-    this.projectTasks.forEach(obj => {
+    this.projectTasks.forEach(obj => {        
         appendTaskToDom(obj.title, obj.dueDate, obj.priority);
     })
 }
