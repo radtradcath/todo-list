@@ -1,5 +1,5 @@
 import Task from "./tasks.js";
-export { appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
+export { killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
 
 const newTaskBtn = document.querySelector('.add-task');
 const addTaskBtn = document.querySelector('#add-task-btn');
@@ -98,3 +98,13 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
         domTask.setAttribute("style", "border-color: red");
     }
 };
+
+function killDomTasks() {
+    while (taskContainer.firstChild) {
+        taskContainer.firstChild.remove();
+    };
+};
+
+function renderAddTaskBtn () {
+    
+}

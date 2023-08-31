@@ -1,5 +1,5 @@
 import Task from "./tasks.js";
-import { appendTaskToDom, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority } from './task-dom.js';
+import { killDomTasks, appendTaskToDom, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority } from './task-dom.js';
 import Project from "./project.js";
 export {createNewProjectBtn, handleProjectForm}
 
@@ -79,10 +79,13 @@ function createProjectTask(project) {
 
 
 function renderProject() {
+    killDomTasks();
     this.projectTasks.forEach(obj => {
         appendTaskToDom(obj.title, obj.dueDate, obj.priority);
     })
 }
+
+
 
 
 
