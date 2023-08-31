@@ -1,5 +1,5 @@
 import Task from "./tasks.js";
-export { killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
+export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
 
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
@@ -100,11 +100,26 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
 };
 
 function killDomTasks() {
+    const allDomTasks = document.querySelectorAll('.add-task');
     while (taskContainer.firstChild) {
         taskContainer.firstChild.remove();
-    };
+        };
+    
+    allDomTasks.forEach(element => {
+        element.remove();
+    })
 };
 
-// function renderAddTaskBtn () {
-//     const newTaskBtn
-// }
+function renderAddTaskBtn () {
+    const newTaskBtn = document.createElement('button');
+    newTaskBtn.classList.add('add-task');
+    const newTaskIco = document.createElement('i');
+    newTaskIco.classList.add('fa-solid', 'fa-file-circle-plus');
+    const newTaskLabel = document.createElement('span');
+    newTaskLabel.textContent = 'New Task';
+    newTaskLabel.classList.add('new-task-button');
+
+    taskContainer.appendChild(newTaskBtn);
+    newTaskBtn.appendChild(newTaskIco);
+    newTaskBtn.appendChild(newTaskLabel);
+}
