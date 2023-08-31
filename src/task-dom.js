@@ -50,7 +50,6 @@ function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
 
     let renderThisProjectTask = renderProject.bind(thisProject);
     renderThisProjectTask();
-    console.log(thisProject);
 }
 
 function appendTaskToDom(objectTitle, objectDate, objectPriority) {

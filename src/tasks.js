@@ -5,6 +5,7 @@ export default class Task {
         this.description = description;        
         this.priority = priority;
         this.dueDate = dueDate;
+        console.log(this.id);
 
         Task.idCounter++;
     }
@@ -14,10 +15,13 @@ export default class Task {
     static myTasks = [];
 
     static addTask(task) {
+        console.log(task.id);
+        console.log(Task.myTasks);
         Task.myTasks.push(task);
     }
 
     static removeTask(task) {
-        Task.myTasks.splice(Task.myTasks.findIndex((obj) => obj.id === task.id), 1);
+        console.log(task.id);
+        Task.myTasks.splice(Task.myTasks.findIndex((obj) => obj.id == task.id), 1);
     }
 };

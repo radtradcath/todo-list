@@ -12,6 +12,10 @@ export default class Project {
 
     static myProjects = [];
 
+    static removeProjectFromArray(project) {
+        Project.myProjects.splice(Project.myProjects.findIndex((obj) => obj.id === project.id));
+    }
+
     static addProjectToArray (project) {
         Project.myProjects.push(project);
     }
@@ -19,11 +23,13 @@ export default class Project {
     projectTasks = [];
     
     addTask(task) {
-        this.projectTasks.push(task)
+        this.projectTasks.push(task);
     }
 
     removeTask(task) {
-        this.projectTasks.splice(this.projectTasks.findIndex((obj) => obj.id === task.id), 1);
+        console.log(task.id);
+        
+        this.projectTasks.splice(this.projectTasks.findIndex((obj) => obj.id == task.id), 1);
     }
 }
 

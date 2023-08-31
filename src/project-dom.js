@@ -1,6 +1,7 @@
 import Task from "./tasks.js";
 import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Project from "./project.js";
+import { renderAllTasks } from "./main-dom.js";
 export {createNewProjectBtn, handleProjectForm, thisProjectId, renderProject};
 
 const newProjectBtn = document.querySelector('.new-project');
@@ -52,7 +53,7 @@ function appendProjectToList(newProject) {
     const deleteProjectBtn = document.createElement('button');
     const deleteProjectIco = document.createElement('i');
     project.classList.add('project-list');
-    project.setAttribute('id', id);
+    project.setAttribute('id', `project-${id}`);
     deleteProjectBtn.classList.add('delete-project-button');
     deleteProjectIco.setAttribute('class', "fa-solid fa-trash-can");
     projectTitle.textContent = newProject.title;
@@ -64,9 +65,12 @@ function appendProjectToList(newProject) {
     
 
     let renderThisProject = renderProject.bind(newProject);
+    let killThisProject = killProject.bind(newProject);
 
     project.addEventListener('click', renderThisProject);
-    id++
+
+    deleteProjectBtn.addEventListener('click', killThisProject);
+    id++;
 };
 
 function renderProject() {
@@ -77,6 +81,22 @@ function renderProject() {
         appendTaskToDom(obj.title, obj.dueDate, obj.priority);
     })
 }
+
+function killProject(e) {
+    e.stopImmediatePropagation();    
+    const projectPos = document.getElementById(`project-${this.id}`);
+    
+    this.projectTasks.forEach((obj) => {
+        console.log(this);               
+        // this.removeTask(obj);
+        // Task.removeTask(obj);
+    });
+
+    // projectPos.remove();
+    // Project.removeProjectFromArray(this); 
+    // renderAllTasks();   
+       
+};
 
 
 
