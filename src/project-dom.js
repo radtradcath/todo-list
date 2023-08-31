@@ -1,7 +1,7 @@
 import Task from "./tasks.js";
-import { renderAddTaskBtn, killDomTasks, appendTaskToDom, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority } from './task-dom.js';
+import { renderAddTaskBtn, killDomTasks, appendTaskToDom, createTask } from './task-dom.js';
 import Project from "./project.js";
-export {createNewProjectBtn, handleProjectForm}
+export {createNewProjectBtn, handleProjectForm, thisProjectId, renderProject};
 
 const newProjectBtn = document.querySelector('.new-project');
 const projectDialog = document.querySelector('#project-dialog');
@@ -9,8 +9,8 @@ const createProjectBtn = document.querySelector('#create-project-btn');
 const cancelProjectBtn = document.querySelector('#cancel-project-btn');
 const projectTitleInput = document.querySelector('#project-title');
 const projectsContainer = document.querySelector('.second-section');
-let id = 0;
 let savedProjectInputTitle;
+let thisProjectId = 0;
 
 const createNewProjectBtn = (() => {
     newProjectBtn.addEventListener('click', showProjectDialog);
@@ -54,7 +54,7 @@ function appendProjectToList(newProject) {
     const deleteProjectBtn = document.createElement('button');
     const deleteProjectIco = document.createElement('i');
     project.classList.add('project-list');
-    project.setAttribute('id', id);
+    // project.setAttribute('id', id);
     deleteProjectBtn.classList.add('delete-project-button');
     deleteProjectIco.setAttribute('class', "fa-solid fa-trash-can");
     console.log(newProject.title);
@@ -64,21 +64,15 @@ function appendProjectToList(newProject) {
     project.appendChild(projectTitle);
     project.appendChild(deleteProjectBtn);
     deleteProjectBtn.appendChild(deleteProjectIco);   
-    id++
+    
 
     let renderThisProject = renderProject.bind(newProject);
 
     project.addEventListener('click', renderThisProject);
 };
 
-function createProjectTask(project) {
-    let newTask = new Task(savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority);
-    project.addTask(newTask);
-    Task.addTask(newTask);
-}
-
-
 function renderProject() {
+    thisProjectId = this.id;
     killDomTasks();
     renderAddTaskBtn();
     this.projectTasks.forEach(obj => {

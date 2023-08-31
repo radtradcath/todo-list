@@ -1,5 +1,7 @@
 import Task from "./tasks.js";
-export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
+import Project from "./project.js";
+import { renderProject, thisProjectId } from "./project-dom.js";
+export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, createTask };
 
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
@@ -7,10 +9,10 @@ const taskDate = document.querySelector('#dueDate');
 const taskDescription = document.querySelector('#description');
 const taskPriority = document.querySelector('#priority');
 const taskContainer = document.querySelector('.main-content');
-let savedTaskInputTitle;
-let savedTaskInputDate;
-let savedTaskInputDescription;
-let savedTaskInputPriority;
+// let savedTaskInputTitle;
+// let savedTaskInputDate;
+// let savedTaskInputDescription;
+// let savedTaskInputPriority;
 
 const handleCreateNewTaskBtn = () => {
     const newTaskBtn = document.querySelector('.add-task');
@@ -34,17 +36,24 @@ const handleTaskForm = (() => {
 function saveTaskValues(e) {
     e.preventDefault();
 
-    savedTaskInputTitle = taskTitle.value;
-    savedTaskInputDate = taskDate.value;
-    savedTaskInputDescription = taskDescription.value;
-    savedTaskInputPriority = taskPriority.value;
+    let savedTaskInputTitle = taskTitle.value;
+    let savedTaskInputDate = taskDate.value;
+    let savedTaskInputDescription = taskDescription.value;
+    let savedTaskInputPriority = taskPriority.value;
 
-    createTask();
+    createTask(savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority);
 };
 
-function createTask() {
-    let newTask = new Task(savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority);
+function createTask(inputTitle, inputDate, inputDescription, inputPriority) {
+    let newTask = new Task(inputTitle, inputDate, inputDescription, inputPriority);
+
+    let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
+    thisProject.addTask(newTask);
     Task.addTask(newTask);
+
+    let renderThisProjectTask = renderProject.bind(thisProject);
+    renderThisProjectTask();
+    console.log(thisProject);
 }
 
 function appendTaskToDom(objectTitle, objectDate, objectPriority) {
