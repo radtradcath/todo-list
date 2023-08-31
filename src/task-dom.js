@@ -39,8 +39,13 @@ function saveTaskValues(e) {
     savedTaskInputDescription = taskDescription.value;
     savedTaskInputPriority = taskPriority.value;
 
+    createTask();
 };
 
+function createTask() {
+    let newTask = new Task(savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority);
+    Task.addTask(newTask);
+}
 
 function appendTaskToDom(objectTitle, objectDate, objectPriority) {
     const domTask = document.createElement('button');
@@ -122,4 +127,7 @@ function renderAddTaskBtn () {
     taskContainer.appendChild(newTaskBtn);
     newTaskBtn.appendChild(newTaskIco);
     newTaskBtn.appendChild(newTaskLabel);
-}
+
+    newTaskBtn.addEventListener('click', handleCreateNewTaskBtn);
+};
+
