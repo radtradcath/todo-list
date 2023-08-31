@@ -1,9 +1,6 @@
 import Task from "./tasks.js";
 export { killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, savedTaskInputTitle, savedTaskInputDate, savedTaskInputDescription, savedTaskInputPriority };
 
-const newTaskBtn = document.querySelector('.add-task');
-const addTaskBtn = document.querySelector('#add-task-btn');
-const cancelTaskBtn = document.querySelector('#cancel-task-btn');
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
 const taskDate = document.querySelector('#dueDate');
@@ -16,6 +13,7 @@ let savedTaskInputDescription;
 let savedTaskInputPriority;
 
 const handleCreateNewTaskBtn = () => {
+    const newTaskBtn = document.querySelector('.add-task');
     newTaskBtn.addEventListener('click', showTaskDialog);
 
     function showTaskDialog() {
@@ -24,6 +22,8 @@ const handleCreateNewTaskBtn = () => {
 };
 
 const handleTaskForm = (() => {
+    const addTaskBtn = document.querySelector('#add-task-btn');
+    const cancelTaskBtn = document.querySelector('#cancel-task-btn');
     addTaskBtn.addEventListener('click', saveTaskValues);
     cancelTaskBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -105,6 +105,6 @@ function killDomTasks() {
     };
 };
 
-function renderAddTaskBtn () {
-    
-}
+// function renderAddTaskBtn () {
+//     const newTaskBtn
+// }

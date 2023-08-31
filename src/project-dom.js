@@ -33,6 +33,7 @@ function saveProjectFormInput(e) {
 
     savedProjectInputTitle = projectTitleInput.value;
     createProject(savedProjectInputTitle);
+    projectDialog.close();
 };
 
 function createProject(title){
