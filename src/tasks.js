@@ -2,7 +2,7 @@ export default class Task {
     constructor(title, description, priority, dueDate) {
         this.id = Task.idCounter;
         this.title = title;
-        this.description = description;        
+        this.description = description;
         this.priority = priority;
         this.dueDate = dueDate;
         console.log(this.id);

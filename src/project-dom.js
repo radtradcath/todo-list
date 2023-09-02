@@ -72,7 +72,7 @@ function renderThisProjectTasks(e) {
     renderAddTaskBtn(thisProjectId);
 
     thisProject.projectTasks.forEach(task => {
-        appendTaskToDom(task.title, task.dueDate, task.priority);
+        appendTaskToDom(task.title, task.dueDate, task.priority, task.id);
     });
     
 };

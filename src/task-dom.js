@@ -1,7 +1,8 @@
 import Task from "./tasks.js";
 import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
-export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm};
+import { promptConfirmation } from "./main-dom.js";
+export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
@@ -40,8 +41,9 @@ function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
 
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
-    thisProject.addTask(newTask);    
-    
+    thisProject.addTask(newTask);
+    Task.addTask(newTask);
+
     updateDomProjectTasks(thisProject);
 };
 
@@ -49,11 +51,11 @@ function updateDomProjectTasks(project) {
     killDomTasks();
     renderAddTaskBtn(project.id);
     project.projectTasks.forEach(task => {
-        appendTaskToDom(task.title, task.dueDate, task.priority);
+        appendTaskToDom(task.title, task.dueDate, task.priority, task.id);
     });
 }
 
-function appendTaskToDom(objectTitle, objectDate, objectPriority) {
+function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     const domTask = document.createElement('button');
     const domTitle = document.createElement('div');
     const domDate = document.createElement('div');
@@ -68,6 +70,7 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
     const editIco = document.createElement('i');
 
     domTask.classList.add('listed-task');
+    domTask.setAttribute('id', `listed-task-${objectId}`);
     domTitle.classList.add('task-header', 'domTitle');
     domDate.classList.add('task-header', 'domDate');
     domDone.classList.add('task-header', 'domDone');
@@ -105,23 +108,38 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority) {
         domTask.setAttribute("style", "border-color: green");
     } else if (objectPriority === 'medium') {
         domTask.setAttribute("style", "border-color: yellow");
-    } else if (objectPriority === 'high') {        
+    } else if (objectPriority === 'high') {
         domTask.setAttribute("style", "border-color: red");
     }
+
+    domDoneBtn.addEventListener('click', killThisTask);
 };
+
+function killThisTask(e) {
+    e.stopPropagation();
+    
+    let taskToKill = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);
+    let projectThatHasTask = Project.myProjects.find(project => project.projectTasks.includes(taskToKill));   
+     
+    e.currentTarget.parentNode.remove();
+    Task.removeTask(taskToKill);
+    projectThatHasTask.removeTask(taskToKill);
+}
+
+
 
 function killDomTasks() {
     const allDomTasks = document.querySelectorAll('.add-task');
     while (taskContainer.firstChild) {
         taskContainer.firstChild.remove();
-        };
-    
+    };
+
     allDomTasks.forEach(element => {
         element.remove();
     })
 };
 
-function renderAddTaskBtn (projectId) {
+function renderAddTaskBtn(projectId) {
     const newTaskBtn = document.createElement('button');
     newTaskBtn.classList.add('add-task');
     newTaskBtn.setAttribute('id', `add-task-${projectId}`);
