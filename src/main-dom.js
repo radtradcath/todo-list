@@ -1,20 +1,24 @@
-import Task from "./tasks.js";
-import { appendTaskToDom } from "./task-dom";
-export {handleAllTasksBtn, renderAllTasks};
-
+import { appendTaskToDom } from "./task-dom.js";
+import Project from './project.js';
+export {handleAllTasksBtn};
 
 const tasksContainer = document.querySelector('.main-content');
 const allTasksBtn = document.querySelector('.all');
 
-let handleAllTasksBtn = (() => allTasksBtn.addEventListener('click', renderAllTasks))();
+const handleAllTasksBtn = (function() {
+     allTasksBtn.addEventListener('click', renderAllTasks);
+})();
 
 
 function renderAllTasks() {
     killAllContent();
-    Task.myTasks.forEach(obj => {
-        appendTaskToDom(obj.title, obj.dueDate, obj.priority);
+    
+    Project.myProjects.forEach(project => {
+        project.projectTasks.forEach(task => {
+            appendTaskToDom(task.title, task.dueDate, task.priority);
+        })
     });
-}
+};
 
 function killAllContent() {
     while(tasksContainer.firstChild) {

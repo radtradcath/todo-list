@@ -15,13 +15,10 @@ export default class Task {
     static myTasks = [];
 
     static addTask(task) {
-        console.log(task.id);
-        console.log(Task.myTasks);
         Task.myTasks.push(task);
     }
 
     static removeTask(task) {
-        console.log(task.id);
         Task.myTasks.splice(Task.myTasks.findIndex((obj) => obj.id == task.id), 1);
     }
 };

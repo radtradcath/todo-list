@@ -13,7 +13,7 @@ export default class Project {
     static myProjects = [];
 
     static removeProjectFromArray(project) {
-        Project.myProjects.splice(Project.myProjects.findIndex((obj) => obj.id === project.id));
+        Project.myProjects.splice(Project.myProjects.indexOf(project), 1);
     }
 
     static addProjectToArray (project) {
@@ -26,8 +26,7 @@ export default class Project {
         this.projectTasks.push(task);
     }
 
-    removeTask(task) {
-        console.log(task.id);
+    removeTask(task) {       
         
         this.projectTasks.splice(this.projectTasks.findIndex((obj) => obj.id == task.id), 1);
     }

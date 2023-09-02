@@ -1,8 +1,7 @@
-import Task from "./tasks.js";
 import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
+import Task from './tasks.js';
 import Project from "./project.js";
-import { renderAllTasks } from "./main-dom.js";
-export {createNewProjectBtn, handleProjectForm, thisProjectId, renderProject};
+export {createNewProjectBtn, handleProjectForm, thisProjectId};
 
 const newProjectBtn = document.querySelector('.new-project');
 const projectDialog = document.querySelector('#project-dialog');
@@ -10,9 +9,8 @@ const createProjectBtn = document.querySelector('#create-project-btn');
 const cancelProjectBtn = document.querySelector('#cancel-project-btn');
 const projectTitleInput = document.querySelector('#project-title');
 const projectsContainer = document.querySelector('.second-section');
-let savedProjectInputTitle;
-let thisProjectId = 0;
 let id = 0;
+let thisProjectId;
 
 const createNewProjectBtn = (() => {
     newProjectBtn.addEventListener('click', showProjectDialog);
@@ -32,8 +30,7 @@ const handleProjectForm = (() => {
 
 function saveProjectFormInput(e) {
     e.preventDefault();
-
-    savedProjectInputTitle = projectTitleInput.value;
+    let savedProjectInputTitle = projectTitleInput.value;    
     createProject(savedProjectInputTitle);
     projectDialog.close();
 };
@@ -43,8 +40,6 @@ function createProject(title){
     
     Project.addProjectToArray(new1Project);
     appendProjectToList(new1Project);
-
-    return new1Project;
 }
 
 function appendProjectToList(newProject) {
@@ -53,7 +48,7 @@ function appendProjectToList(newProject) {
     const deleteProjectBtn = document.createElement('button');
     const deleteProjectIco = document.createElement('i');
     project.classList.add('project-list');
-    project.setAttribute('id', `project-${id}`);
+    project.setAttribute('id', id);
     deleteProjectBtn.classList.add('delete-project-button');
     deleteProjectIco.setAttribute('class', "fa-solid fa-trash-can");
     projectTitle.textContent = newProject.title;
@@ -61,42 +56,46 @@ function appendProjectToList(newProject) {
     projectsContainer.appendChild(project);
     project.appendChild(projectTitle);
     project.appendChild(deleteProjectBtn);
-    deleteProjectBtn.appendChild(deleteProjectIco);   
+    deleteProjectBtn.appendChild(deleteProjectIco);    
     
-
-    let renderThisProject = renderProject.bind(newProject);
-    let killThisProject = killProject.bind(newProject);
-
-    project.addEventListener('click', renderThisProject);
-
+    project.addEventListener('click', renderThisProjectTasks);
     deleteProjectBtn.addEventListener('click', killThisProject);
+
     id++;
 };
 
-function renderProject() {
-    thisProjectId = this.id;
-    killDomTasks();
-    renderAddTaskBtn();
-    this.projectTasks.forEach(obj => {        
-        appendTaskToDom(obj.title, obj.dueDate, obj.priority);
-    })
-}
-
-function killProject(e) {
-    e.stopImmediatePropagation();    
-    const projectPos = document.getElementById(`project-${this.id}`);
+function renderThisProjectTasks(e) {
+    thisProjectId = e.currentTarget.id;   
+    let thisProject = Project.myProjects.find(project => e.currentTarget.id == project.id);
     
-    this.projectTasks.forEach((obj) => {
-        console.log(this);               
-        // this.removeTask(obj);
-        // Task.removeTask(obj);
+    killDomTasks();
+    renderAddTaskBtn(thisProjectId);
+
+    thisProject.projectTasks.forEach(task => {
+        appendTaskToDom(task.title, task.dueDate, task.priority);
+    });
+    
+};
+
+function killThisProject(e) {
+    e.stopPropagation(); 
+
+    const projectDomList = document.querySelectorAll('.project-list');
+    projectDomList.forEach(domProject => {
+        domProject.id == e.currentTarget.parentNode.id ? domProject.remove() : "";
     });
 
-    // projectPos.remove();
-    // Project.removeProjectFromArray(this); 
-    // renderAllTasks();   
-       
+    let projectToKill = Project.myProjects.find(project => e.currentTarget.parentNode.id == project.id); 
+    killDomTasks(); 
+    Project.removeProjectFromArray(projectToKill);
+    
 };
+
+
+
+
+
+
 
 
 

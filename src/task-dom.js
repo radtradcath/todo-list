@@ -1,7 +1,7 @@
 import Task from "./tasks.js";
 import Project from "./project.js";
-import { renderProject, thisProjectId } from "./project-dom.js";
-export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleCreateNewTaskBtn, handleTaskForm, createTask };
+import { thisProjectId } from "./project-dom.js";
+export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm};
 
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
@@ -32,12 +32,7 @@ const handleTaskForm = (() => {
 function saveTaskValues(e) {
     e.preventDefault();
 
-    let savedTaskInputTitle = taskTitle.value;
-    let savedTaskInputDate = taskDate.value;
-    let savedTaskInputDescription = taskDescription.value;
-    let savedTaskInputPriority = taskPriority.value;
-
-    createTask(savedTaskInputTitle, savedTaskInputDescription, savedTaskInputPriority, savedTaskInputDate);
+    createTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
     taskDialog.close();
 };
 
@@ -45,11 +40,17 @@ function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
 
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
-    thisProject.addTask(newTask);
-    Task.addTask(newTask);
+    thisProject.addTask(newTask);    
+    
+    updateDomProjectTasks(thisProject);
+};
 
-    let renderThisProjectTask = renderProject.bind(thisProject);
-    renderThisProjectTask();
+function updateDomProjectTasks(project) {
+    killDomTasks();
+    renderAddTaskBtn(project.id);
+    project.projectTasks.forEach(task => {
+        appendTaskToDom(task.title, task.dueDate, task.priority);
+    });
 }
 
 function appendTaskToDom(objectTitle, objectDate, objectPriority) {
@@ -120,9 +121,10 @@ function killDomTasks() {
     })
 };
 
-function renderAddTaskBtn () {
+function renderAddTaskBtn (projectId) {
     const newTaskBtn = document.createElement('button');
     newTaskBtn.classList.add('add-task');
+    newTaskBtn.setAttribute('id', `add-task-${projectId}`);
     const newTaskIco = document.createElement('i');
     newTaskIco.classList.add('fa-solid', 'fa-file-circle-plus');
     const newTaskLabel = document.createElement('span');
