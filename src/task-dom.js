@@ -1,7 +1,7 @@
 import Task from "./tasks.js";
 import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
-import { promptConfirmation } from "./main-dom.js";
+import { currentWindow, promptConfirmation, renderAllTasks } from "./main-dom.js";
 export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
 const taskDialog = document.querySelector('#task-dialog');
@@ -10,19 +10,26 @@ const taskDate = document.querySelector('#dueDate');
 const taskDescription = document.querySelector('#description');
 const taskPriority = document.querySelector('#priority');
 const taskContainer = document.querySelector('.main-content');
+const dialogTitle = taskDialog.querySelector('p');
+const addTaskBtn = document.querySelector('#add-task-btn');
+const cancelTaskBtn = document.querySelector('#cancel-task-btn');
+let editingTask = false;
+let taskToBeEdited;
 
 const handleCreateNewTaskBtn = () => {
     const newTaskBtn = document.querySelector('.add-task');
+    addTaskBtn.textContent = 'Add';
     newTaskBtn.addEventListener('click', showTaskDialog);
 
     function showTaskDialog() {
+        clearInputs();
+        dialogTitle.textContent = 'New Task';
         taskDialog.showModal();
     }
 };
 
 const handleTaskForm = (() => {
-    const addTaskBtn = document.querySelector('#add-task-btn');
-    const cancelTaskBtn = document.querySelector('#cancel-task-btn');
+
     addTaskBtn.addEventListener('click', saveTaskValues);
     cancelTaskBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -30,10 +37,39 @@ const handleTaskForm = (() => {
     })
 })();
 
+function setInputsDefaultValues(title, description, priority, dueDate) {
+    taskTitle.value = title;
+    taskDescription.value = description;
+    taskPriority.value = priority;
+    taskDate.value = dueDate;
+}
+
+function clearInputs() {
+    taskTitle.value = '';
+    taskDescription.value = '';
+    taskPriority.value = '';
+    taskDate.value = '';
+}
+
 function saveTaskValues(e) {
     e.preventDefault();
 
-    createTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
+    if (editingTask === true) {
+        let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
+        let projectEditTask = Project.myProjects.find(project => project.projectTasks.includes(taskToBeEdited));
+        projectEditTask.removeTask(taskToBeEdited);
+        projectEditTask.addTask(editedTask);
+        editingTask = false;
+        if (currentWindow === 'all-tasks') {
+            renderAllTasks();
+        } else {
+            updateDomProjectTasks(projectEditTask);
+        }
+    } else {
+        createTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
+    }
+
+
     taskDialog.close();
 };
 
@@ -113,20 +149,30 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     }
 
     domDoneBtn.addEventListener('click', killThisTask);
+    domEditBtn.addEventListener('click', handleEditBtn)
 };
+
+function handleEditBtn(e) {
+    e.stopPropagation;
+    taskDialog.showModal();
+
+    taskToBeEdited = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);
+    setInputsDefaultValues(taskToBeEdited.title, taskToBeEdited.description, taskToBeEdited.priority, taskToBeEdited.dueDate);
+    dialogTitle.textContent = 'Edit Task';
+    addTaskBtn.textContent = 'Edit';
+    editingTask = true;
+}
 
 function killThisTask(e) {
     e.stopPropagation();
-    
+
     let taskToKill = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);
-    let projectThatHasTask = Project.myProjects.find(project => project.projectTasks.includes(taskToKill));   
-     
+    let projectThatHasTask = Project.myProjects.find(project => project.projectTasks.includes(taskToKill));
+
     e.currentTarget.parentNode.remove();
     Task.removeTask(taskToKill);
     projectThatHasTask.removeTask(taskToKill);
 }
-
-
 
 function killDomTasks() {
     const allDomTasks = document.querySelectorAll('.add-task');

@@ -21,4 +21,13 @@ export default class Task {
     static removeTask(task) {
         Task.myTasks.splice(Task.myTasks.findIndex((obj) => obj.id == task.id), 1);
     }
+
+    editTask(title, description, priority, dueDate) {
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.dueDate = dueDate;
+
+        return this;
+    }
 };
