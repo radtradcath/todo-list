@@ -4,8 +4,7 @@ export default class Task {
         this.title = title;
         this.description = description;
         this.priority = priority;
-        this.dueDate = dueDate;
-        console.log(this.id);
+        this.dueDate = dueDate;        
 
         Task.idCounter++;
     }

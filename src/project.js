@@ -16,18 +16,18 @@ export default class Project {
         Project.myProjects.splice(Project.myProjects.indexOf(project), 1);
     }
 
-    static addProjectToArray (project) {
+    static addProjectToArray(project) {
         Project.myProjects.push(project);
     }
 
     projectTasks = [];
-    
+
     addTask(task) {
         this.projectTasks.push(task);
     }
 
-    removeTask(task) {       
-        
+    removeTask(task) {
+
         this.projectTasks.splice(this.projectTasks.findIndex((obj) => obj.id == task.id), 1);
     }
 }

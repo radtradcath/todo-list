@@ -2,8 +2,10 @@ import Task from "./tasks.js";
 import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
 import { currentWindow, promptConfirmation, renderAllTasks } from "./main-dom.js";
+import format from 'date-fns/format';
 export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
+const taskForm = document.querySelector('#task-form');
 const taskDialog = document.querySelector('#task-dialog');
 const taskTitle = document.querySelector('#task-title');
 const taskDate = document.querySelector('#dueDate');
@@ -15,6 +17,8 @@ const addTaskBtn = document.querySelector('#add-task-btn');
 const cancelTaskBtn = document.querySelector('#cancel-task-btn');
 let editingTask = false;
 let taskToBeEdited;
+
+
 
 const handleCreateNewTaskBtn = () => {
     const newTaskBtn = document.querySelector('.add-task');
@@ -54,8 +58,12 @@ function clearInputs() {
 function saveTaskValues(e) {
     e.preventDefault();
 
+    let isValid = taskForm.checkValidity();
+    if (!isValid) {
+        taskForm.reportValidity();
+    } else {
     if (editingTask === true) {
-        let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
+        let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
         let projectEditTask = Project.myProjects.find(project => project.projectTasks.includes(taskToBeEdited));
         projectEditTask.removeTask(taskToBeEdited);
         projectEditTask.addTask(editedTask);
@@ -66,11 +74,13 @@ function saveTaskValues(e) {
             updateDomProjectTasks(projectEditTask);
         }
     } else {
-        createTask(taskTitle.value, taskDescription.value, taskPriority.value, taskDate.value);
+        createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
     }
 
 
+    
     taskDialog.close();
+}
 };
 
 function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
@@ -99,7 +109,6 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     const domEdit = document.createElement('div');
     const domTitleValue = document.createElement('div');
     const domDateValue = document.createElement('div');
-    const domNoteBtn = document.createElement('button');
     const domDoneBtn = document.createElement('button');
     const doneIco = document.createElement('i');
     const domEditBtn = document.createElement('button');
@@ -113,7 +122,6 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     domEdit.classList.add('task-header', 'domEdit');
     domTitleValue.classList.add('title-value');
     domDateValue.classList.add('date-value');
-    domNoteBtn.classList.add('note-btn');
     domDoneBtn.classList.add('done-btn');
     doneIco.setAttribute('class', 'fa-solid fa-circle-check');
     domEditBtn.classList.add('edit-btn');
@@ -126,7 +134,6 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     domTask.appendChild(domEdit);
     domTask.appendChild(domTitleValue);
     domTask.appendChild(domDateValue);
-    domTask.appendChild(domNoteBtn);
     domDoneBtn.appendChild(doneIco);
     domTask.appendChild(domDoneBtn);
     domEditBtn.appendChild(editIco);
@@ -138,7 +145,6 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     domEdit.textContent = "Edit";
     domTitleValue.textContent = objectTitle;
     domDateValue.textContent = objectDate;
-    domNoteBtn.textContent = "New Note";
 
     if (objectPriority === 'low') {
         domTask.setAttribute("style", "border-color: green");
@@ -149,11 +155,32 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     }
 
     domDoneBtn.addEventListener('click', killThisTask);
-    domEditBtn.addEventListener('click', handleEditBtn)
+    domEditBtn.addEventListener('click', handleEditBtn);
+    domTask.addEventListener('click', handleTaskContentDialog);
 };
 
+const thisTaskDialog = document.querySelector('#this-task-dialog');
+const thisTaskTitle = document.querySelector('.this-task-title');
+const thisTaskDate = document.querySelector('.this-task-date');
+const thisTaskDescription = document.querySelector('.this-task-description');
+const thisTaskClose = document.querySelector('#this-task-dialog > button');
+
+function handleTaskContentDialog(e) {
+    thisTaskDialog.setAttribute('style', 'display: grid;');
+    let thisTask = Task.myTasks.find(task => e.currentTarget.id == `listed-task-${task.id}`);
+    thisTaskTitle.textContent = thisTask.title;
+    thisTaskDate.textContent = thisTask.dueDate;
+    thisTaskDescription.textContent = thisTask.description;
+    thisTaskDialog.showModal();
+    thisTaskClose.addEventListener('click', () => {
+        thisTaskDialog.setAttribute('style', 'display: none;');
+        thisTaskDialog.close()
+    });
+}
+
+
 function handleEditBtn(e) {
-    e.stopPropagation;
+    e.stopPropagation();
     taskDialog.showModal();
 
     taskToBeEdited = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);

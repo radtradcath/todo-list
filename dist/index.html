@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="https://kit.fontawesome.com/f853d09d28.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
 <script defer src="bundle.js"></script></head>
 
 <body>
     <div class="page-container">
         <header>
-            <h1>To-Do App</h1>
-            <button>Toggle theme</button>
+            <h1>To-Do App</h1>            
         </header>
         <div class="sidebar">
             <div class="first-section">
@@ -38,33 +40,37 @@
         </div>
         <div class="main-content"></div>
         <footer>
-            <div class="tm"></div>
+            <div class="tm">RadTradCath @ <a href="http://github.com/radtradcath" rel="noreferrer noopener">Git Hub</a></div>
         </footer>
     </div>
 
     <dialog id="task-dialog">
-        <form action="">
+        <form id='task-form' action="">
             <p>New Task</p>
-            <label for="task-title">Title
-                <input type="text" id="task-title" name="title">
+            <label for="task-title">
+                <span>Title</span>
+                <input type="text" id="task-title" name="title" required>
             </label>
 
-            <label for="dueDate"> Date
-                <input type="date" id="dueDate" name="dueDate">
+            <label for="dueDate" >
+                <span>Date</span>
+                <input type="date" id="dueDate" name="dueDate" required>
             </label>
 
-            <label for="description">Description
+            <label for="description">
+                <span>Description</span>
                 <input type="textarea" id="description" name="description">
             </label>
 
-            <label for="priority">Priority
-                <select name="priority" id="priority">
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
+            <label for="priority">
+                <span>Priority</span>
+                <select name="priority" id="priority" >
+                    <option value="low" style="color: green;">Low</option>
+                    <option value="medium" style="color: yellow;">Medium</option>
+                    <option value="high" style="color: red;">High</option>
                 </select>
             </label>
-            <button id="add-task-btn">Add</button>
+            <button for="task-form" type="submit" id="add-task-btn">Add</button>
             <button id="cancel-task-btn">Cancel</button>
         </form>
     </dialog>
@@ -73,11 +79,19 @@
         <p>New Project</p>
         <form action="">
             <label for="project-title">Title
-                <input type="text" id="project-title" name="project-title">
+                <input type="text" id="project-title" name="project-title" required>
             </label>
             <button id="create-project-btn">Create</button>
             <button id="cancel-project-btn">Cancel</button>
         </form>
+    </dialog>
+
+    <dialog id="this-task-dialog" style="display: none;">
+        <span class="this-task-title" style="font-size: 2em; grid-row: 1 / 2; grid-column: 1 / 2;"></span>
+        <span class="this-task-date" style="font-size: 2em; grid-row: 1 / 2; grid-column: 2 / 3;"></span>
+        <p style="font-size: 2em; grid-row: 2 / 3; grid-column: 1 / 3; margin: 0;">Description</p>
+        <p class="this-task-description"></p>
+        <button>Close</button>
     </dialog>
 </body>
 

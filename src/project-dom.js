@@ -1,7 +1,7 @@
 import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Task from './tasks.js';
 import Project from "./project.js";
-export {createNewProjectBtn, handleProjectForm, thisProjectId};
+export { createNewProjectBtn, handleProjectForm, thisProjectId };
 
 const newProjectBtn = document.querySelector('.new-project');
 const projectDialog = document.querySelector('#project-dialog');
@@ -30,14 +30,14 @@ const handleProjectForm = (() => {
 
 function saveProjectFormInput(e) {
     e.preventDefault();
-    let savedProjectInputTitle = projectTitleInput.value;    
+    let savedProjectInputTitle = projectTitleInput.value;
     createProject(savedProjectInputTitle);
     projectDialog.close();
 };
 
-function createProject(title){
-    let new1Project = new Project(title);    
-    
+function createProject(title) {
+    let new1Project = new Project(title);
+
     Project.addProjectToArray(new1Project);
     appendProjectToList(new1Project);
 }
@@ -56,8 +56,8 @@ function appendProjectToList(newProject) {
     projectsContainer.appendChild(project);
     project.appendChild(projectTitle);
     project.appendChild(deleteProjectBtn);
-    deleteProjectBtn.appendChild(deleteProjectIco);    
-    
+    deleteProjectBtn.appendChild(deleteProjectIco);
+
     project.addEventListener('click', renderThisProjectTasks);
     deleteProjectBtn.addEventListener('click', killThisProject);
 
@@ -65,30 +65,30 @@ function appendProjectToList(newProject) {
 };
 
 function renderThisProjectTasks(e) {
-    thisProjectId = e.currentTarget.id;   
+    thisProjectId = e.currentTarget.id;
     let thisProject = Project.myProjects.find(project => e.currentTarget.id == project.id);
-    
+
     killDomTasks();
     renderAddTaskBtn(thisProjectId);
 
     thisProject.projectTasks.forEach(task => {
         appendTaskToDom(task.title, task.dueDate, task.priority, task.id);
     });
-    
+
 };
 
 function killThisProject(e) {
-    e.stopPropagation(); 
+    e.stopPropagation();
 
     const projectDomList = document.querySelectorAll('.project-list');
     projectDomList.forEach(domProject => {
         domProject.id == e.currentTarget.parentNode.id ? domProject.remove() : "";
     });
 
-    let projectToKill = Project.myProjects.find(project => e.currentTarget.parentNode.id == project.id); 
-    killDomTasks(); 
+    let projectToKill = Project.myProjects.find(project => e.currentTarget.parentNode.id == project.id);
+    killDomTasks();
     Project.removeProjectFromArray(projectToKill);
-    
+
 };
 
 
