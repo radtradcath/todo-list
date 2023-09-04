@@ -3,6 +3,7 @@ import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
 import { currentWindow, promptConfirmation, renderAllTasks } from "./main-dom.js";
 import format from 'date-fns/format';
+import { saveProjectsInStorage } from "./project.js";
 export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
 const taskForm = document.querySelector('#task-form');
@@ -67,6 +68,7 @@ function saveTaskValues(e) {
         let projectEditTask = Project.myProjects.find(project => project.projectTasks.includes(taskToBeEdited));
         projectEditTask.removeTask(taskToBeEdited);
         projectEditTask.addTask(editedTask);
+        saveProjectsInStorage();
         editingTask = false;
         if (currentWindow === 'all-tasks') {
             renderAllTasks();
@@ -75,6 +77,7 @@ function saveTaskValues(e) {
         }
     } else {
         createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
+        
     }
 
 
@@ -89,6 +92,7 @@ function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
     thisProject.addTask(newTask);
     Task.addTask(newTask);
+    saveProjectsInStorage();
 
     updateDomProjectTasks(thisProject);
 };
@@ -199,6 +203,7 @@ function killThisTask(e) {
     e.currentTarget.parentNode.remove();
     Task.removeTask(taskToKill);
     projectThatHasTask.removeTask(taskToKill);
+    saveProjectsInStorage();
 }
 
 function killDomTasks() {

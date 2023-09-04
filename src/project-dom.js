@@ -1,7 +1,8 @@
 import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Task from './tasks.js';
 import Project from "./project.js";
-export { createNewProjectBtn, handleProjectForm, thisProjectId };
+import { saveProjectsInStorage } from './project.js';
+export { appendProjectToList, createNewProjectBtn, handleProjectForm, thisProjectId };
 
 const newProjectBtn = document.querySelector('.new-project');
 const projectDialog = document.querySelector('#project-dialog');
@@ -40,6 +41,7 @@ function createProject(title) {
 
     Project.addProjectToArray(new1Project);
     appendProjectToList(new1Project);
+    saveProjectsInStorage();
 }
 
 function appendProjectToList(newProject) {
@@ -67,13 +69,15 @@ function appendProjectToList(newProject) {
 function renderThisProjectTasks(e) {
     thisProjectId = e.currentTarget.id;
     let thisProject = Project.myProjects.find(project => e.currentTarget.id == project.id);
-
+    console.log(thisProject);
+    console.log(e.currentTarget.id);
     killDomTasks();
     renderAddTaskBtn(thisProjectId);
 
     thisProject.projectTasks.forEach(task => {
         appendTaskToDom(task.title, task.dueDate, task.priority, task.id);
     });
+
 
 };
 
@@ -88,7 +92,7 @@ function killThisProject(e) {
     let projectToKill = Project.myProjects.find(project => e.currentTarget.parentNode.id == project.id);
     killDomTasks();
     Project.removeProjectFromArray(projectToKill);
-
+    saveProjectsInStorage();
 };
 
 
