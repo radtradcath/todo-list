@@ -2,6 +2,7 @@ import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Task from './tasks.js';
 import Project from "./project.js";
 import { updateProjectsLocalStorage } from './index.js';
+import { setCurrentWindow } from './main-dom.js';
 export { appendProjectToList, createNewProjectBtn, handleProjectForm, thisProjectId };
 
 const newProjectBtn = document.querySelector('.new-project');
@@ -66,6 +67,7 @@ function appendProjectToList(newProject) {
 };
 
 function renderThisProjectTasks(e) {
+    setCurrentWindow('projects');
     thisProjectId = e.currentTarget.id;
     let thisProject = Project.myProjects.find(project => e.currentTarget.id == project.id);
    

@@ -1,10 +1,13 @@
 import { appendTaskToDom } from "./task-dom.js";
 import Project from './project.js';
-export { handleAllTasksBtn, currentWindow, renderAllTasks };
+export { handleAllTasksBtn, currentWindow, setCurrentWindow, renderAllTasks };
 
 const tasksContainer = document.querySelector('.main-content');
 const allTasksBtn = document.querySelector('.all');
 let currentWindow;
+let setCurrentWindow = function(window) {
+    currentWindow = window;
+}
 
 const handleAllTasksBtn = (function () {
     allTasksBtn.addEventListener('click', renderAllTasks);
@@ -12,7 +15,7 @@ const handleAllTasksBtn = (function () {
 
 
 function renderAllTasks() {
-    currentWindow = 'all-tasks';
+    setCurrentWindow('all-tasks');
     killAllContent();
 
     Project.myProjects.forEach(project => {
