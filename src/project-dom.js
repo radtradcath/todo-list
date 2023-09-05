@@ -1,7 +1,7 @@
 import { renderAddTaskBtn, killDomTasks, appendTaskToDom } from './task-dom.js';
 import Task from './tasks.js';
 import Project from "./project.js";
-import { saveProjectsInStorage } from './project.js';
+import { updateProjectsLocalStorage } from './index.js';
 export { appendProjectToList, createNewProjectBtn, handleProjectForm, thisProjectId };
 
 const newProjectBtn = document.querySelector('.new-project');
@@ -10,7 +10,6 @@ const createProjectBtn = document.querySelector('#create-project-btn');
 const cancelProjectBtn = document.querySelector('#cancel-project-btn');
 const projectTitleInput = document.querySelector('#project-title');
 const projectsContainer = document.querySelector('.second-section');
-let id = 0;
 let thisProjectId;
 
 const createNewProjectBtn = (() => {
@@ -36,12 +35,14 @@ function saveProjectFormInput(e) {
     projectDialog.close();
 };
 
+// 
+
 function createProject(title) {
     let new1Project = new Project(title);
 
     Project.addProjectToArray(new1Project);
     appendProjectToList(new1Project);
-    saveProjectsInStorage();
+    updateProjectsLocalStorage();
 }
 
 function appendProjectToList(newProject) {
@@ -50,7 +51,7 @@ function appendProjectToList(newProject) {
     const deleteProjectBtn = document.createElement('button');
     const deleteProjectIco = document.createElement('i');
     project.classList.add('project-list');
-    project.setAttribute('id', id);
+    project.setAttribute('id', newProject.id);
     deleteProjectBtn.classList.add('delete-project-button');
     deleteProjectIco.setAttribute('class', "fa-solid fa-trash-can");
     projectTitle.textContent = newProject.title;
@@ -62,23 +63,19 @@ function appendProjectToList(newProject) {
 
     project.addEventListener('click', renderThisProjectTasks);
     deleteProjectBtn.addEventListener('click', killThisProject);
-
-    id++;
 };
 
 function renderThisProjectTasks(e) {
     thisProjectId = e.currentTarget.id;
     let thisProject = Project.myProjects.find(project => e.currentTarget.id == project.id);
-    console.log(thisProject);
-    console.log(e.currentTarget.id);
+   
     killDomTasks();
     renderAddTaskBtn(thisProjectId);
 
     thisProject.projectTasks.forEach(task => {
         appendTaskToDom(task.title, task.dueDate, task.priority, task.id);
     });
-
-
+    updateProjectsLocalStorage()
 };
 
 function killThisProject(e) {
@@ -91,8 +88,15 @@ function killThisProject(e) {
 
     let projectToKill = Project.myProjects.find(project => e.currentTarget.parentNode.id == project.id);
     killDomTasks();
+
+    let thisProjectTasks = projectToKill.projectTasks;
+
+    thisProjectTasks.forEach(obj => {
+        Task.removeTask(obj);
+    })
+
     Project.removeProjectFromArray(projectToKill);
-    saveProjectsInStorage();
+    updateProjectsLocalStorage();
 };
 
 

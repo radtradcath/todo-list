@@ -3,7 +3,7 @@ import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
 import { currentWindow, promptConfirmation, renderAllTasks } from "./main-dom.js";
 import format from 'date-fns/format';
-import { saveProjectsInStorage } from "./project.js";
+import { updateProjectsLocalStorage } from "./index.js";
 export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
 const taskForm = document.querySelector('#task-form');
@@ -18,7 +18,7 @@ const addTaskBtn = document.querySelector('#add-task-btn');
 const cancelTaskBtn = document.querySelector('#cancel-task-btn');
 let editingTask = false;
 let taskToBeEdited;
-
+let projectThatHasTaskToBeEdited;
 
 
 const handleCreateNewTaskBtn = () => {
@@ -56,6 +56,25 @@ function clearInputs() {
     taskDate.value = '';
 }
 
+function handleEditBtn(e) {
+    e.stopPropagation();
+    taskDialog.showModal();
+    Project.myProjects.forEach(project => {
+        project.projectTasks.forEach(task => {
+            e.currentTarget.parentNode.id == `listed-task-${task.id}` ? projectThatHasTaskToBeEdited = project : "";         
+        })
+    })
+
+    Task.myTasks.forEach(task => {
+        e.currentTarget.parentNode.id == `listed-task-${task.id}` ? taskToBeEdited = task : "";
+    })
+    
+    setInputsDefaultValues(taskToBeEdited.title, taskToBeEdited.description, taskToBeEdited.priority, taskToBeEdited.dueDate);
+    dialogTitle.textContent = 'Edit Task';
+    addTaskBtn.textContent = 'Edit';
+    editingTask = true;
+}
+
 function saveTaskValues(e) {
     e.preventDefault();
 
@@ -63,28 +82,29 @@ function saveTaskValues(e) {
     if (!isValid) {
         taskForm.reportValidity();
     } else {
-    if (editingTask === true) {
-        let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
-        let projectEditTask = Project.myProjects.find(project => project.projectTasks.includes(taskToBeEdited));
-        projectEditTask.removeTask(taskToBeEdited);
-        projectEditTask.addTask(editedTask);
-        saveProjectsInStorage();
-        editingTask = false;
-        if (currentWindow === 'all-tasks') {
-            renderAllTasks();
+        if (editingTask === true) {
+            console.log(taskToBeEdited)
+            let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
+            console.log(taskToBeEdited)
+            projectThatHasTaskToBeEdited.removeTask(taskToBeEdited);
+            projectThatHasTaskToBeEdited.addTask(editedTask);
+            editingTask = false;
+            if (currentWindow === 'all-tasks') {
+                renderAllTasks();
+            } else {
+                updateDomProjectTasks(projectThatHasTaskToBeEdited);
+            }
         } else {
-            updateDomProjectTasks(projectEditTask);
+            createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
+
         }
-    } else {
-        createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
-        
+
+        taskDialog.close();
     }
-
-
-    
-    taskDialog.close();
-}
+    updateProjectsLocalStorage();
 };
+
+
 
 function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
@@ -92,9 +112,9 @@ function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
     thisProject.addTask(newTask);
     Task.addTask(newTask);
-    saveProjectsInStorage();
 
     updateDomProjectTasks(thisProject);
+    updateProjectsLocalStorage();
 };
 
 function updateDomProjectTasks(project) {
@@ -161,6 +181,7 @@ function appendTaskToDom(objectTitle, objectDate, objectPriority, objectId) {
     domDoneBtn.addEventListener('click', killThisTask);
     domEditBtn.addEventListener('click', handleEditBtn);
     domTask.addEventListener('click', handleTaskContentDialog);
+    updateProjectsLocalStorage();
 };
 
 const thisTaskDialog = document.querySelector('#this-task-dialog');
@@ -182,28 +203,23 @@ function handleTaskContentDialog(e) {
     });
 }
 
-
-function handleEditBtn(e) {
-    e.stopPropagation();
-    taskDialog.showModal();
-
-    taskToBeEdited = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);
-    setInputsDefaultValues(taskToBeEdited.title, taskToBeEdited.description, taskToBeEdited.priority, taskToBeEdited.dueDate);
-    dialogTitle.textContent = 'Edit Task';
-    addTaskBtn.textContent = 'Edit';
-    editingTask = true;
-}
-
 function killThisTask(e) {
     e.stopPropagation();
+    let projectThatHasTask;
+    let taskToKill;
+    
+    Project.myProjects.forEach(project => {
+        project.projectTasks.forEach(task => {
+            e.currentTarget.parentNode.id == `listed-task-${task.id}` ? projectThatHasTask = project : "";
+            e.currentTarget.parentNode.id == `listed-task-${task.id}` ? taskToKill = task : "";
+        })
+    })
 
-    let taskToKill = Task.myTasks.find(task => e.currentTarget.parentNode.id == `listed-task-${task.id}`);
-    let projectThatHasTask = Project.myProjects.find(project => project.projectTasks.includes(taskToKill));
-
+    console.log(projectThatHasTask);
     e.currentTarget.parentNode.remove();
     Task.removeTask(taskToKill);
     projectThatHasTask.removeTask(taskToKill);
-    saveProjectsInStorage();
+    updateProjectsLocalStorage();
 }
 
 function killDomTasks() {
