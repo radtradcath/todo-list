@@ -1,8 +1,9 @@
 import Task from "./tasks.js";
 import Project from "./project.js";
 import { thisProjectId } from "./project-dom.js";
-import { currentWindow, promptConfirmation, renderAllTasks } from "./main-dom.js";
+import { currentWindow, promptConfirmation, renderAllTasks, renderTodayTasks, renderTomorrowTasks } from "./main-dom.js";
 import format from 'date-fns/format';
+import parseISO from 'date-fns/parseISO'
 import { updateProjectsLocalStorage } from "./index.js";
 export { renderAddTaskBtn, killDomTasks, appendTaskToDom, handleTaskForm };
 
@@ -84,18 +85,22 @@ function saveTaskValues(e) {
     } else {
         if (editingTask === true) {
             console.log(taskToBeEdited)
-            let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
+            let editedTask = taskToBeEdited.editTask(taskTitle.value, taskDescription.value, taskPriority.value, format(parseISO(taskDate.value), 'PPPP'));
             console.log(taskToBeEdited)
             projectThatHasTaskToBeEdited.removeTask(taskToBeEdited);
             projectThatHasTaskToBeEdited.addTask(editedTask);
             editingTask = false;
             if (currentWindow === 'all-tasks') {
                 renderAllTasks();
-            } else {
+            } else if (currentWindow === 'project') {
                 updateDomProjectTasks(projectThatHasTaskToBeEdited);
+            } else if (currentWindow === 'today') {
+                renderTodayTasks();
+            } else {
+                renderTodayTasks();
             }
         } else {
-            createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(new Date(taskDate.value), 'PPPP'));
+            createTask(taskTitle.value, taskDescription.value, taskPriority.value, format(parseISO(taskDate.value), 'PPPP'));
 
         }
 
@@ -108,7 +113,7 @@ function saveTaskValues(e) {
 
 function createTask(inputTitle, inputDescription, inputPriority, inputDate) {
     let newTask = new Task(inputTitle, inputDescription, inputPriority, inputDate);
-
+    console.log(newTask);
     let thisProject = Project.myProjects.find(obj => obj.id == thisProjectId);
     thisProject.addTask(newTask);
     Task.addTask(newTask);

@@ -1,7 +1,7 @@
 import './style.css';
 import { handleTaskForm } from './task-dom.js';
 import { appendProjectToList, createNewProjectBtn, handleProjectForm } from './project-dom.js';
-import { handleAllTasksBtn } from './main-dom.js';
+import { handleAllTasksBtn, handleTodayBtn } from './main-dom.js';
 export { updateProjectsLocalStorage };
 import Project from './project.js';
 import Task from './tasks.js';
@@ -44,6 +44,14 @@ function getStorage() {
         let stringProjects = localStorage.getItem('projectsArray');
         let parsedProjects = JSON.parse(stringProjects);
         let i = 0;
+        let k = 0;
+
+        parsedProjects.forEach(project => {
+            project.projectTasks.map(task => {
+                task.id = k;
+                k++;
+            })
+        })
 
         for (let project of parsedProjects) {
             project.id = i;
